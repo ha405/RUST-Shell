@@ -1,7 +1,3 @@
-Here’s the completed and polished version of your `README` file with all the necessary Docker-related information fully fleshed out:
-
----
-
 # Basic Shell Implementation in Rust
 
 This project provides a basic implementation of a shell in Rust, demonstrating fundamental shell functionalities using low-level system calls. It is designed to mimic a command-line interface, allowing users to interact with the operating system by executing commands. This project showcases Rust's ability to interact with the operating system via system calls and demonstrates basic file navigation and control.
