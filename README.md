@@ -136,7 +136,3 @@ From there, you can manually run the binary:
 * Improve error handling and user feedback.
 * Support for scripting and batch execution of commands.
 * Cross-platform compatibility (e.g., Windows support using alternative system calls).
-
----
-
-This updated `README` file now provides comprehensive instructions for both local development and Docker-based deployment, making it easier for users to get started with your project. It also includes detailed explanations of the Docker setup and usage, ensuring clarity for developers unfamiliar with containerization.
