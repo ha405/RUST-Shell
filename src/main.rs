@@ -1,12 +1,10 @@
 use std::collections::VecDeque;
-use std::env;
 use std::ffi::CString;
 use std::io::{self, Write};
 use libc::{chdir, execvp, fork, getcwd, mkdir, rmdir, waitpid, WIFEXITED, WEXITSTATUS, PATH_MAX};
 
 fn main() {
     let mut directory_stack: VecDeque<String> = VecDeque::new();
-
     loop {
         // Display prompt with the current directory
         let cwd = current_directory().unwrap_or_else(|_| "unknown".into());
@@ -17,7 +15,6 @@ fn main() {
         let mut input = String::new();
         io::stdin().read_line(&mut input).unwrap();
         let input = input.trim();
-
         if input.is_empty() {
             continue;
         }
@@ -47,10 +44,12 @@ fn main() {
 fn current_directory() -> Result<String, String> {
     let mut buf = vec![0u8; PATH_MAX as usize];
     unsafe {
-        if getcwd(buf.as_mut_ptr() as *mut i8, PATH_MAX).is_null() {
+        if getcwd(buf.as_mut_ptr() as *mut i8, PATH_MAX.try_into().unwrap()).is_null() {
             Err("Failed to get current directory".to_string())
         } else {
-            Ok(CString::from_raw(buf.as_mut_ptr() as *mut i8).into_string().unwrap())
+            // Find the first null byte to truncate the buffer
+            let pos = buf.iter().position(|&c| c == 0).unwrap_or(buf.len());
+            Ok(String::from_utf8_lossy(&buf[..pos]).into_owned())
         }
     }
 }
@@ -122,7 +121,7 @@ fn make_directory(args: &[&str]) {
         let c_dir_name = CString::new(*dir_name).unwrap();
         unsafe {
             if mkdir(c_dir_name.as_ptr(), 0o755) != 0 {
-                eprintln!("mkdir: Failed to create directory {}");
+                eprintln!("mkdir: Failed to create directory {}", dir_name);
             }
         }
     } else {
@@ -135,7 +134,7 @@ fn remove_directory(args: &[&str]) {
         let c_dir_name = CString::new(*dir_name).unwrap();
         unsafe {
             if rmdir(c_dir_name.as_ptr()) != 0 {
-                eprintln!("rmdir: Failed to remove directory {}");
+                eprintln!("rmdir: Failed to remove directory {}", dir_name);
             }
         }
     } else {
@@ -155,7 +154,6 @@ fn execute_basic_command(cmd: &str, args: &[&str]) {
             let mut c_args_ptrs: Vec<*const i8> = c_args.iter().map(|arg| arg.as_ptr()).collect();
             c_args_ptrs.insert(0, c_cmd.as_ptr());
             c_args_ptrs.push(std::ptr::null());
-
             execvp(c_cmd.as_ptr(), c_args_ptrs.as_ptr());
             eprintln!("Command not found: {}", cmd);
             libc::_exit(1);
