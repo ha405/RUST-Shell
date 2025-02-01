@@ -1,3 +1,7 @@
+Here’s the completed and polished version of your `README` file with all the necessary Docker-related information fully fleshed out:
+
+---
+
 # Basic Shell Implementation in Rust
 
 This project provides a basic implementation of a shell in Rust, demonstrating fundamental shell functionalities using low-level system calls. It is designed to mimic a command-line interface, allowing users to interact with the operating system by executing commands. This project showcases Rust's ability to interact with the operating system via system calls and demonstrates basic file navigation and control.
@@ -48,7 +52,7 @@ The shell uses several key Rust libraries and system call interfaces:
 *   `std::ffi::CString`: For conversion to C-style strings for system calls.
 *   `std::io`: For input and output operations (reading user input, writing to the console).
 *   `libc`: Rust bindings for C standard library functions.
-*   Low-Level System Calls: Uses system calls like `chdir`, `execvp`, `fork`, `getcwd`, `mkdir`, `rmdir`, and `waitpid`.
+*   **Low-Level System Calls:** Uses system calls like `chdir`, `execvp`, `fork`, `getcwd`, `mkdir`, `rmdir`, and `waitpid`.
 
 ## Challenges
 
@@ -70,20 +74,20 @@ This project required careful management of:
 
 ### Running the Shell Locally
 
-1.  Clone this repository to your local machine:
-    ```bash
-    git clone https://github.com/your-repo/rust-shell.git
-    ```
+1. Clone this repository to your local machine:
+   ```bash
+   git clone https://github.com/your-repo/rust-shell.git
+   ```
 
-2.  Navigate to the project directory:
-    ```bash
-    cd rust-shell
-    ```
+2. Navigate to the project directory:
+   ```bash
+   cd rust-shell
+   ```
 
-3.  Build and run the shell:
-    ```bash
-    cargo run
-    ```
+3. Build and run the shell:
+   ```bash
+   cargo run
+   ```
 
 ### Running the Shell with Docker
 
@@ -92,6 +96,51 @@ To containerize the application and run it in a Linux environment, follow these 
 #### 1. Build the Docker Image
 
 Run the following command to build the Docker image:
-
 ```bash
 docker build -t rust-shell-app .
+```
+
+This command builds the image using the `Dockerfile` provided in the project. The `Dockerfile` uses a multi-stage build process:
+- **Builder Stage**: Compiles the Rust application using the `rust:1.73` image.
+- **Runtime Stage**: Copies the compiled binary into a minimal Debian-based image (`debian:bullseye-slim`) to reduce the final image size.
+
+#### 2. Run the Container
+
+Once the image is built, run the container interactively:
+```bash
+docker run -it --rm rust-shell-app
+```
+
+This starts the shell inside the container, allowing you to interact with it as if it were running locally.
+
+#### 3. Debugging Inside the Container (Optional)
+
+If you need to debug or inspect the container, you can start an interactive shell session:
+```bash
+docker run -it --rm rust-shell-app /bin/bash
+```
+
+From there, you can manually run the binary:
+```bash
+/usr/local/bin/RUST-Shell
+```
+
+#### 4. Notes on Docker
+
+- The runtime image (`debian:bullseye-slim`) includes a newer version of `glibc` to avoid compatibility issues with the Rust binary.
+- If you encounter issues related to `glibc` versions, consider switching to a newer runtime image (e.g., `debian:bookworm-slim`) or statically linking the binary using the `musl` target.
+- To avoid rebuilding the Docker image every time you make changes to the code, you can mount your source code into the container at runtime:
+  ```bash
+  docker run -it --rm -v "$(pwd):/usr/src/RUST-Shell" rust-shell-app cargo run --release
+  ```
+
+## Future Improvements
+
+* Add support for more shell commands (e.g., `cp`, `mv`, `rm`).
+* Improve error handling and user feedback.
+* Support for scripting and batch execution of commands.
+* Cross-platform compatibility (e.g., Windows support using alternative system calls).
+
+---
+
+This updated `README` file now provides comprehensive instructions for both local development and Docker-based deployment, making it easier for users to get started with your project. It also includes detailed explanations of the Docker setup and usage, ensuring clarity for developers unfamiliar with containerization.
