@@ -47,7 +47,6 @@ fn current_directory() -> Result<String, String> {
         if getcwd(buf.as_mut_ptr() as *mut i8, PATH_MAX.try_into().unwrap()).is_null() {
             Err("Failed to get current directory".to_string())
         } else {
-            // Find the first null byte to truncate the buffer
             let pos = buf.iter().position(|&c| c == 0).unwrap_or(buf.len());
             Ok(String::from_utf8_lossy(&buf[..pos]).into_owned())
         }
