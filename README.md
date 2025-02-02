@@ -80,7 +80,7 @@ docker build -t rust-shell-app .
 ```
 
 This command builds the image using the `Dockerfile` provided in the project. The `Dockerfile` uses a multi-stage build process:
-- **Builder Stage**: Compiles the Rust application using the `rust:1.73` image.
+- **Builder Stage**: Compiles the Rust application using the `rust:1.83` image.
 - **Runtime Stage**: Copies the compiled binary into a minimal Debian-based image (`debian:bullseye-slim`) to reduce the final image size.
 
 #### 2. Run the Container
