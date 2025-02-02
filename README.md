@@ -68,23 +68,6 @@ This project required careful management of:
     *   [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
 *   This project is designed to run on **Unix-like operating systems**. It has been tested on a Linux environment and will not work natively on Windows without modification.
 
-### Running the Shell Locally
-
-1. Clone this repository to your local machine:
-   ```bash
-   git clone https://github.com/your-repo/rust-shell.git
-   ```
-
-2. Navigate to the project directory:
-   ```bash
-   cd rust-shell
-   ```
-
-3. Build and run the shell:
-   ```bash
-   cargo run
-   ```
-
 ### Running the Shell with Docker
 
 To containerize the application and run it in a Linux environment, follow these steps:
