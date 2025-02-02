@@ -81,7 +81,7 @@ docker build -t rust-shell-app .
 
 This command builds the image using the `Dockerfile` provided in the project. The `Dockerfile` uses a multi-stage build process:
 - **Builder Stage**: Compiles the Rust application using the `rust:1.83` image.
-- **Runtime Stage**: Copies the compiled binary into a minimal Debian-based image (`debian:bullseye-slim`) to reduce the final image size.
+- **Runtime Stage**: Copies the compiled binary into a minimal Debian-based image (`debian:bookworm-slim`) to reduce the final image size.
 
 #### 2. Run the Container
 
@@ -103,16 +103,6 @@ From there, you can manually run the binary:
 ```bash
 /usr/local/bin/RUST-Shell
 ```
-
-#### 4. Notes on Docker
-
-- The runtime image (`debian:bullseye-slim`) includes a newer version of `glibc` to avoid compatibility issues with the Rust binary.
-- If you encounter issues related to `glibc` versions, consider switching to a newer runtime image (e.g., `debian:bookworm-slim`) or statically linking the binary using the `musl` target.
-- To avoid rebuilding the Docker image every time you make changes to the code, you can mount your source code into the container at runtime:
-  ```bash
-  docker run -it --rm -v "$(pwd):/usr/src/RUST-Shell" rust-shell-app cargo run --release
-  ```
-
 ## Future Improvements
 
 * Add support for more shell commands (e.g., `cp`, `mv`, `rm`).
